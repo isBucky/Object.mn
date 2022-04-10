@@ -44,11 +44,17 @@ Use this function to set values inside the object.
 
 - **Params**:
   - **Path**:
-    - Type: String,
-    - Required: true,
-    - Example: 'path/to/value'
-  - **Value**: b
-  - **Callback**: c
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Value**:
+    - **Type:** `Any`
+    - **Required:** `true`
+    - **Example:** `your value`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
   
 ~~~javascript
 // Without using callback:

@@ -41,13 +41,12 @@ console.log(myObjectManager);
 # Functions and options
 ## [Set(...params)](./index.js#49)
 Use this function to set values inside the object.
+Params:
+- Path: a
+- Value: b
+- Callback: c
 
 ~~~javascript
-import ObjectManager from 'object.mn';
-
-let myObject = {},
-  myObjectManager = new ObjectManager(myObject);
-  
 // Without using callback:
 myObjectManager.set('path/to/value', true);
 console.log(myObject); // Output: { path: { to: { value: true } } }

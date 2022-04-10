@@ -4,8 +4,10 @@
   <p>They can also be used as a callback, passing a function in the parameters that returns the value of the query.</p>
 </div>
 
+---
+
 # Set(...params)
-<p align="center"><strong>Use this function to set values inside the object.</strong></p>
+> Use this function to set values inside the object.
 
 - Params:
   - Path:
@@ -20,6 +22,8 @@
     - Type: `Function`
     - Required: `false`
     - Example: `(data) => console.log(data)`
+
+---
 
 ~~~javascript
 import ObjectManager from 'object.mn';

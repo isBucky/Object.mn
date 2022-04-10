@@ -1,6 +1,6 @@
 {
   "name": "object.mn",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "An npm with various functions to manage objects.",
   "main": "index.js",
   "repository": {

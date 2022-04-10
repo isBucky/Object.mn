@@ -33,12 +33,17 @@ console.log(myObjectManager);
 ~~~
 
 # Functions and options
-## []
-## [myObjectManager.set(...params)](./index.js#49)
-- Params:
-  - Path: `Path where the value will be set.`
-  - Value: `A value to be set on the object.`
-  - Callback?: `Return the result in callback.`
+## [new ObjectManager(...options)](./index.js#24)
+~~~javascript
+/**
+ * @param {Object} [objectData] Source object to save the information.
+ * @param {?String} [split] Query path separator.
+ */
+new ObjectManager({}, '/');
+~~~
+
+## [Set(...params)](./index.js#49)
+Use this function to set values inside the object.
 
 ~~~javascript
 import ObjectManager from 'object.mn';

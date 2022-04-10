@@ -1,6 +1,6 @@
 {
   "name": "object.mn",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "An npm with various functions to manage objects.",
   "main": "index.js",
   "repository": {
@@ -8,8 +8,8 @@
     "url": "git+https://github.com/isBucky/Object.mn.git"
   },
   "exports": {
-    ".": "index.js",
-    "promises": "promises"
+    ".": "./index.js",
+    "./promises": "./Promises.js"
   },
   "keywords": [
     "Object", "Object", "manager",

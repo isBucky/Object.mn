@@ -5,9 +5,9 @@
 </div>
 
 # Table of methods
-- [function Set()](#setparams)
-- [function Get()](#getparams)
-- [function Delete()](#deleteparams)
+- [Set()](#setparams)
+- [Get()](#getparams)
+- [Delete()](#deleteparams)
 
 # Set(...params)
 > Use this function to set values inside the object.

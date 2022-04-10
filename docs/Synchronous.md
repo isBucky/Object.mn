@@ -5,7 +5,7 @@
 </div>
 
 # Set(...params)
-> Use this function to set values inside the object.
+<p align="center"><strong>Use this function to set values inside the object.</strong></p>
 
 - Params:
   - Path:

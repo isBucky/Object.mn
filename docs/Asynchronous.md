@@ -5,18 +5,18 @@
 </div>
 
 # Table of methods
-- [await await Set(...params)](#setparams)
-- [await await Get(...params)](#getparams)
-- [await Delete(...params)](#deleteparams)
-- [await Update(...params)](#updateparams)
-- [await Has(...params)](#hasparams)
-- [await Push(...params)](#pushparams)
-- [await Keys(...params)](#keysparams)
-- [await Values(...params)](#valuesparams)
-- [await Entries(...params)](#entriesparams)
-- [await ToJSON(...params)](#tojsonparams)
+- [await await Set(...params)](#await-setparams)
+- [await await Get(...params)](#await-getparams)
+- [await Delete(...params)](#await-deleteparams)
+- [await Update(...params)](#await-updateparams)
+- [await Has(...params)](#await-hasparams)
+- [await Push(...params)](#await-pushparams)
+- [await Keys(...params)](#await-keysparams)
+- [await Values(...params)](#await-valuesparams)
+- [await Entries(...params)](#await-entriesparams)
+- [await ToJSON(...params)](#await-tojsonparams)
 
-# Set(...params)
+# await Set(...params)
 > Use this function to set values inside the object.
 
 - Params
@@ -47,7 +47,7 @@ let myObject = {},
 })();
 ~~~
 
-# Get(...params)
+# await Get(...params)
 > Use this function to get values inside the object.
 
 - Params
@@ -79,7 +79,7 @@ let
 })();
 ~~~
 
-# Delete(...params)
+# await Delete(...params)
 > Use this function to delete a specific value in the object.
 
 - Params
@@ -111,7 +111,7 @@ let
 })();
 ~~~
 
-# Update(...params)
+# await Update(...params)
 > Use this function to update object elements..
 
 - Params
@@ -150,7 +150,7 @@ let
 })();
 ~~~
 
-# Has(...params)
+# await Has(...params)
 > Use this function to check the existence of a value in the object.
 
 - Params
@@ -177,7 +177,7 @@ let myObject = { key: 'value' },
 }();
 ~~~
 
-# Push(...params)
+# await Push(...params)
 > Use this function to insert/create an Array in the object.
 
 - Params
@@ -212,7 +212,7 @@ let myObject = {},
 })();
 ~~~
 
-# Keys(...params)
+# await Keys(...params)
 > Use this function to return all the keys of the object.
 
 - Params
@@ -245,7 +245,7 @@ let
 })();
 ~~~
 
-# Values(...params)
+# await Values(...params)
 > Use this function to return all the Values of the object.
 
 - Params
@@ -278,7 +278,7 @@ let
 })();
 ~~~
 
-# Entries(...params)
+# await Entries(...params)
 > Use this function to return all the Entries of the object.
 
 - Params
@@ -311,7 +311,7 @@ let
 })();
 ~~~
 
-# ToJSON(...params)
+# await ToJSON(...params)
 > Use this function to transform an object into a string.
 
 - Params

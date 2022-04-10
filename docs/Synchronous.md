@@ -4,8 +4,6 @@
   <p>They can also be used as a callback, passing a function in the parameters that returns the value of the query.</p>
 </div>
 
----
-
 # Set(...params)
 > Use this function to set values inside the object.
 
@@ -25,6 +23,7 @@
 
 ---
 
+## Example
 ~~~javascript
 import ObjectManager from 'object.mn';
 

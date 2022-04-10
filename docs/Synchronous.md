@@ -248,8 +248,8 @@ console.log(myObjectManager.push('github/profiles', [
   'isBucky',
   '7Silva',
   '7Johnsz'
-])); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
-console.log(myObject); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
+])); // output: { github: { profiles: ['isBucky', '7Silva', '7Johnsz'] } }
+console.log(myObject); // output: { github: { profiles: ['isBucky', '7Silva', '7Johnsz'] } }
 
 // Using callback:
 myObjectManager.set('github/profiles', [
@@ -257,29 +257,25 @@ myObjectManager.set('github/profiles', [
   '7Silva',
   '7Johnsz'
 ], (data) => {
-  console.log(data); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
-  console.log(myObject); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
+  console.log(data); // output: { github: { profiles: ['isBucky', '7Silva', '7Johnsz'] } }
+  console.log(myObject); // output: { github: { profiles: ['isBucky', '7Silva', '7Johnsz'] } }
 });
 ~~~
 
-# Set(...params)
-> Use this function to set values inside the object.
+# Keys(...params)
+> Use this function to return all the keys of the object.
 
 - Params
   - Path
     - Type: `String`
     - Required: `true`
     - Example: `path/to/value`
-  - Value
-    - Type: `Any`
-    - Required: `true`
-    - Example: `your value`
   - Callback
     - Type: `Function`
     - Required: `false`
     - Example: `(data) => console.log(data)`
 
-- **If you want to see the code, [click here!](../index.js#L49)**
+- **If you want to see the code, [click here!](../index.js#L182)**
 
 ---
 
@@ -287,16 +283,137 @@ myObjectManager.set('github/profiles', [
 ~~~javascript
 import ObjectManager from 'object.mn';
 
-let myObject = {},
+let
+  myObject = {
+    user: {
+      name: 'Bucky',
+      age: 17
+    }
+  },
   myObjectManager = new ObjectManager(myObject);
   
 // Without using callback:
-console.log(myObjectManager.set('path/to/value', true)); // output: { value: true }
-console.log(myObject); // output: { path: { to: { value: true } } }
+console.log(myObjectManager.keys('user')); // output: ['name', 'age']
+console.log(myObjectManager.keys('/')); // output: ['user']
 
 // Using callback:
-myObjectManager.set('path/to/value', true, (data) => {
-  console.log(data); // output: { value: true }
-  console.log(myObject); // output: { path: { to: { value: true } } }
-});
+myObjectManager.keys('user', console.log); // output: ['name', 'age']
+myObjectManager.keys('/', console.log); // output: ['user']
+~~~
+
+# Values(...params)
+> Use this function to return all the Values of the object.
+
+- Params
+  - Path
+    - Type: `String`
+    - Required: `true`
+    - Example: `path/to/value`
+  - Callback
+    - Type: `Function`
+    - Required: `false`
+    - Example: `(data) => console.log(data)`
+
+- **If you want to see the code, [click here!](../index.js#L195)**
+
+---
+
+## Example
+~~~javascript
+import ObjectManager from 'object.mn';
+
+let
+  myObject = {
+    user: {
+      name: 'Bucky',
+      age: 17
+    }
+  },
+  myObjectManager = new ObjectManager(myObject);
+  
+// Without using callback:
+console.log(myObjectManager.values('user')); // output: ['Bucky', '17']
+console.log(myObjectManager.values('/')); // output: [{ name: 'Bucky', age: 17 }]
+
+// Using callback:
+myObjectManager.values('user', console.log); // output: ['Bucky', '17']
+myObjectManager.valued('/', console.log); // output: [{ name: 'Bucky', age: 17 }]
+~~~
+
+# Entries(...params)
+> Use this function to return all the Entries of the object.
+
+- Params
+  - Path
+    - Type: `String`
+    - Required: `true`
+    - Example: `path/to/value`
+  - Callback
+    - Type: `Function`
+    - Required: `false`
+    - Example: `(data) => console.log(data)`
+
+- **If you want to see the code, [click here!](../index.js#L208)**
+
+---
+
+## Example
+~~~javascript
+import ObjectManager from 'object.mn';
+
+let
+  myObject = {
+    user: {
+      name: 'Bucky',
+      age: 17
+    }
+  },
+  myObjectManager = new ObjectManager(myObject);
+  
+// Without using callback:
+console.log(myObjectManager.entries('user')); // output: [ [ 'name', 'Bucky' ], [ 'age', 17 ] ]
+console.log(myObjectManager.entries('/')); // output: [ [ 'user', { name: 'Bucky', age: 17 } ] ]
+
+// Using callback:
+myObjectManager.entries('uset', console.log); // output: [ [ 'name', 'Bucky' ], [ 'age', 17 ] ]
+myObjectManager.entries('/', console.log); // output: [ [ 'user', { name: 'Bucky', age: 17 } ] ]
+~~~
+
+# ToJSON(...params)
+> Use this function to transform an object into a string.
+
+- Params
+  - Path
+    - Type: `String`
+    - Required: `true`
+    - Example: `path/to/value`
+  - Callback
+    - Type: `Function`
+    - Required: `false`
+    - Example: `(data) => console.log(data)`
+
+- **If you want to see the code, [click here!](../index.js#L221)**
+
+---
+
+## Example
+~~~javascript
+import ObjectManager from 'object.mn';
+
+let
+  myObject = {
+    user: {
+      name: 'Bucky',
+      age: 17
+    }
+  },
+  myObjectManager = new ObjectManager(myObject);
+  
+// Without using callback:
+console.log(myObjectManager.toJSON('user')); // output: "{"name":"Bucky","age":17}"
+console.log(myObjectManager.toJSON('/')); // output: "{"user":{"name":"Bucky","age":17}}"
+
+// Using callback:
+myObjectManager.toJSON('uset', console.log); // output: "{"name":"Bucky","age":17}"
+myObjectManager.toJSON('/', console.log); // output: "{"user":{"name":"Bucky","age":17}}"
 ~~~

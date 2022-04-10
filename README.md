@@ -44,9 +44,9 @@ Use this function to set values inside the object.
 
 - **Params**:
   - **Path**:
-    ╰Type: String,
-    ╰Required: true,
-    ╰Example: 'path/to/value'
+    - Type: String,
+    - Required: true,
+    - Example: 'path/to/value'
   - **Value**: b
   - **Callback**: c
   

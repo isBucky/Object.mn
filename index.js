@@ -40,9 +40,9 @@ class ObjectManager {
   /**
    * Use this function to set values inside the object.
    * 
-   * @param {String} [path] Path where the value will be set. Path where the value will be set.
+   * @param {String} [path] Path where the value will be set.
    * @param {Any} [value] A value to be set on the object.
-   * @param {?Function} [callback] Return the result in callback. Return the result in callback.
+   * @param {?Function} [callback] Return the result in callback.
    * 
    * @return {Object}
    */

@@ -27,23 +27,18 @@ yarn add object.mn
 import ObjectManager from 'object.mn';
 
 let myObject = {},
-  /**
-   * You can pass the following parameters in the manager:
-   * 
-   * @param {Object} [object] Source object to save the information.
-   * @param {?String} [split] Query path separator.
-   */
   myObjectManager = new ObjectManager(myObject);
   
 console.log(myObjectManager);
 ~~~
 
-# Functions
+# Functions and options
+## []
 ## [myObjectManager.set(...params)](./index.js#49)
 - Params:
-  - Path:
-  - Value:
-  - Callback?:
+  - Path: `Path where the value will be set.`
+  - Value: `A value to be set on the object.`
+  - Callback?: `Return the result in callback.`
 
 ~~~javascript
 import ObjectManager from 'object.mn';

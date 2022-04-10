@@ -46,8 +46,8 @@ class ObjectManager {
    * 
    * @return {Promise<Object>}
    */
-  async set(...args) {
-    let { path, value, callbackData } = await this.#resolveParams(true, ...args);
+  async set(...params) {
+    let { path, value } = await this.#resolveParams(true, ...params);
       path = path.split(this.split).filter(Boolean);
       
     try {
@@ -75,8 +75,8 @@ class ObjectManager {
    * 
    * @return {Promise<Any>}
    */
-  async get(...args) {
-    let { path, callbackData } = await this.#resolveParams(false, ...args);
+  async get(...params) {
+    let { path } = await this.#resolveParams(false, ...params);
     
     path = path.split(this.split).filter(Boolean);
     if (!path.length) return this.objectData;
@@ -94,8 +94,8 @@ class ObjectManager {
    * 
    * @return {Promise<Object>}
    */
-  async delete(...args) {
-    let { path, callbackData } = await this.#resolveParams(false, ...args);
+  async delete(...params) {
+    let { path } = await this.#resolveParams(false, ...params);
       path = path.split(this.split).filter(Boolean);
       
     try {
@@ -123,16 +123,16 @@ class ObjectManager {
    * 
    * @return {Promise<Object>}
    */
-  async update(...args) {
-    let { path, value, callbackData } = await this.#resolveParams(true, ...args);
+  async update(...params) {
+    let { path, value } = await this.#resolveParams(true, ...params);
     if (typeof value !== 'object') throw new ObjectManagerError('The value can only be of type object, received:', typeof value);
     
     if (path == this.split) {
-      this.set(path, value);
+      await this.set(path, value);
       this.objectData;
     }
     
-    for (let key in value) this.set(path + this.split + key, value[key]);
+    for (let key in value) await this.set(path + this.split + key, value[key]);
     return this.objectData;
   }
   
@@ -144,9 +144,9 @@ class ObjectManager {
    * 
    * @return {Promise<Boolean>}
    */
-  async has(...args) {
-    let { path, callbackData } = await this.#resolveParams(false, ...args);
-    return !!this.get(path);
+  async has(...params) {
+    let { path } = await this.#resolveParams(false, ...params);
+    return !!(await this.get(path));
   }
   
   /**
@@ -158,10 +158,10 @@ class ObjectManager {
    * 
    * @return {Promise<Object>}
    */
-  async push(...args) {
-    let { path, value, callbackData } = await this.#resolveParams(true, ...args);
+  async push(...params) {
+    let { path, value } = await this.#resolveParams(true, ...params);
     try {
-      let data = this.get(path);
+      let data = await this.get(path);
       if (!Array.isArray(data)) data = [];
       
       value = Array.isArray(value) ? value : [value];
@@ -178,9 +178,9 @@ class ObjectManager {
    * 
    * @return {Promise<Array>}
    */
-  async keys(...args) {
-    let { path, callbackData } = await this.#resolveParams(false, ...args);
-    return Object.keys(this.get(path) ?? {});
+  async keys(...params) {
+    let { path } = await this.#resolveParams(false, ...params);
+    return Object.keys((await this.get(path)) ?? {});
   }
   
   /**
@@ -191,9 +191,9 @@ class ObjectManager {
    * 
    * @return {Promise<Array>}
    */
-  async values(...args) {
-    let { path, callbackData } = await this.#resolveParams(false, ...args);
-    return Object.values(this.get(path) ?? {});
+  async values(...params) {
+    let { path } = await this.#resolveParams(false, ...params);
+    return Object.values((await this.get(path)) ?? {});
   }
   
   /**
@@ -204,9 +204,9 @@ class ObjectManager {
    * 
    * @return {Promise<Array>}
    */
-  async entries(...args) {
-    let { path, callbackData } = await this.#resolveParams(false, ...args);
-    return Object.entries(this.get(path) ?? {});
+  async entries(...params) {
+    let { path } = await this.#resolveParams(false, ...params);
+    return Object.entries((await this.get(path)) ?? {});
   }
   
   /**
@@ -217,9 +217,9 @@ class ObjectManager {
    * 
    * @return {Promise<String>}
    */
-  async toJSON(...args) {
-    let { path, callbackData } = await this.#resolveParams(false, ...args);
-    return JSON.stringify(this.get(path) ?? {}));
+  async toJSON(...params) {
+    let { path } = await this.#resolveParams(false, ...params);
+    return JSON.stringify((await this.get(path)) ?? {});
   }
   
   /**
@@ -227,18 +227,18 @@ class ObjectManager {
    * 
    * @private
    * @param {Boolean} [requiredValue] Is the "value" parameter mandatory?
-   * @param {Any} [...args] Parameters passed by the function.
+   * @param {Any} [...params] Parameters passed by the function.
    * 
    * @return {Promise<Object>}
    */
-  async #resolveParams(requiredValue, ...args) {
-    let [path, value] = args;
+  async #resolveParams(requiredValue, ...params) {
+    let [path, value] = params;
     
     if (!path || typeof path !== 'string') throw new ObjectManagerError('The path has to be a string, reveived:', typeof path);
     if (requiredValue && !value && value !== 0) throw new ObjectManagerError('You have not set a valid value, received:', typeof value);
     if (requiredValue && typeof value == 'function') throw new ObjectManagerError('The value cannot be of type Function!');
     
-    return { path, value, callbackData };
+    return { path, value };
   }
 }
 

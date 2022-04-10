@@ -46,8 +46,8 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  set(...args) {
-    let { path, value, callbackData } = this.#resolveParams(true, ...args);
+  set(...params) {
+    let { path, value, callbackData } = this.#resolveParams(true, ...params);
       path = path.split(this.split).filter(Boolean);
       
     try {
@@ -75,8 +75,8 @@ class ObjectManager {
    * 
    * @return {Any}
    */
-  get(...args) {
-    let { path, callbackData } = this.#resolveParams(false, ...args);
+  get(...params) {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
     
     path = path.split(this.split).filter(Boolean);
     if (!path.length) return this.objectData;
@@ -95,8 +95,8 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  delete(...args) {
-    let { path, callbackData } = this.#resolveParams(false, ...args);
+  delete(...params) {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
       path = path.split(this.split).filter(Boolean);
       
     try {
@@ -124,8 +124,8 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  update(...args) {
-    let { path, value, callbackData } = this.#resolveParams(true, ...args);
+  update(...params) {
+    let { path, value, callbackData } = this.#resolveParams(true, ...params);
     if (typeof value !== 'object') throw new ObjectManagerError('The value can only be of type object, received:', typeof value);
     
     if (path == this.split) {
@@ -145,8 +145,8 @@ class ObjectManager {
    * 
    * @return {Boolean}
    */
-  has(...args) {
-    let { path, callbackData } = this.#resolveCallback(false, ...args);
+  has(...params) {
+    let { path, callbackData } = this.#resolveCallback(false, ...params);
     return this.#resolveCallback(callbackData, !!this.get(path));
   }
   
@@ -159,8 +159,8 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  push(...args) {
-    let { path, value, callbackData } = this.#resolveParams(true, ...args);
+  push(...params) {
+    let { path, value, callbackData } = this.#resolveParams(true, ...params);
     try {
       let data = this.get(path);
       if (!Array.isArray(data)) data = [];
@@ -179,8 +179,8 @@ class ObjectManager {
    * 
    * @return {Array}
    */
-  keys(...args) {
-    let { path, callbackData } = this.#resolveParams(false, ...args);
+  keys(...params) {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
     return this.#resolveCallback(callbackData, Object.keys(this.get(path) ?? {}));
   }
   
@@ -192,8 +192,8 @@ class ObjectManager {
    * 
    * @return {Array}
    */
-  values(...args) {
-    let { path, callbackData } = this.#resolveParams(false, ...args);
+  values(...params) {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
     return this.#resolveCallback(callbackData, Object.values(this.get(path) ?? {}));
   }
   
@@ -205,8 +205,8 @@ class ObjectManager {
    * 
    * @return {Array}
    */
-  entries(...args) {
-    let { path, callbackData } = this.#resolveParams(false, ...args);
+  entries(...params) {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
     return this.#resolveCallback(callbackData, Object.entries(this.get(path) ?? {}));
   }
   
@@ -218,8 +218,8 @@ class ObjectManager {
    * 
    * @return {String}
    */
-  toJSON(...args) {
-    let { path, callbackData } = this.#resolveParams(false, ...args);
+  toJSON(...params) {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
     return this.#resolveCallback(callbackData, JSON.stringify(this.get(path) ?? {}));
   }
   
@@ -228,12 +228,12 @@ class ObjectManager {
    * 
    * @private
    * @param {Boolean} [requiredValue] Is the "value" parameter mandatory?
-   * @param {Any} [...args] Parameters passed by the function.
+   * @param {Any} [...params] Parameters passed by the function.
    * 
    * @return {Object}
    */
-  #resolveParams(requiredValue, ...args) {
-    let [path, value, callbackData] = args;
+  #resolveParams(requiredValue, ...params) {
+    let [path, value, callbackData] = params;
     
     if (!path || typeof path !== 'string') throw new ObjectManagerError('The path has to be a string, reveived:', typeof path);
     if (requiredValue && !value && value !== 0) throw new ObjectManagerError('You have not set a valid value, received:', typeof value);

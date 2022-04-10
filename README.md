@@ -27,21 +27,18 @@ yarn add object.mn
 import ObjectManager from 'object.mn';
 
 let myObject = {},
-  myObjectManager = new ObjectManager(myObject);
+  /**
+   * You can use these parameters below to configure the manager:
+   * 
+   * @param {Object} [object] Source object to save the information.
+   * @param {?String} [split] Query path separator.
+   */
+  myObjectManager = new ObjectManager(myObject, /* '/' */);
   
 console.log(myObjectManager);
 ~~~
 
 # Functions and options
-## [new ObjectManager(...options)](./index.js#24)
-~~~javascript
-/**
- * @param {Object} [objectData] Source object to save the information.
- * @param {?String} [split] Query path separator.
- */
-new ObjectManager({}, '/');
-~~~
-
 ## [Set(...params)](./index.js#49)
 Use this function to set values inside the object.
 
@@ -60,16 +57,3 @@ myObjectManager.set('path/to/value', true, (data) => {
   return console.log(data); // Output: { path: { to: { value: true } } }
 });
 ~~~
-
-| Name | Params |
-| ---- | ------ |
-| `set` | `Object` `path` `values` `split` `callback` |
-| `get` | `Object` `path` `split` `callback` |
-| `delete` | `Object` `path` `split` `callback` |
-| `update` | `Object` `path` `object value` `split` `callback` |
-| `has` | `Object` `path` `split` `callback` |
-| `push` | `Object` `path` `values``split` `callback` |
-| `keys` | `Object` `path` `split` `callback` |
-| `toJSON` | `Object` `path` `split` `callback` |
-| `values` | `Object` `path` `split` `callback` |
-| `entries` | `Object` `path` `split` `callback` |

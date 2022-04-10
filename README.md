@@ -39,8 +39,9 @@ console.log(myObjectManager);
 ~~~
 
 # Functions and options
+
 ## [Set(...params)](./index.js#49)
-Use this function to set values inside the object.
+**Use this function to set values inside the object.**
 
 - **Params**:
   - **Path**:
@@ -59,10 +60,198 @@ Use this function to set values inside the object.
 ~~~javascript
 // Without using callback:
 myObjectManager.set('path/to/value', true);
-console.log(myObject); // Output: { path: { to: { value: true } } }
+console.log(myObject);
 
 // Using callback:
 myObjectManager.set('path/to/value', true, (data) => {
-  return console.log(data); // Output: { path: { to: { value: true } } }
+  return console.log(data);
+});
+~~~
+
+## [Get(...params)](./index.js#78)
+**Use this function to get values inside the object.**
+
+- **Params**:
+  - **Path**:
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
+  
+~~~javascript
+// Without using callback:
+let data = myObjectManager.get('path/to/value');
+console.log(data);
+
+// Using callback:
+myObjectManager.get('path/to/value', (data) => {
+  return console.log(data);
+});
+~~~
+
+## [Delete(...params)](./index.js#98)
+**Use this function to delete a specific value in the object.**
+
+- **Params**:
+  - **Path**:
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
+  
+~~~javascript
+// Without using callback:
+myObjectManager.delete('path/to/value');
+console.log(myObject);
+
+// Using callback:
+myObjectManager.delete('path/to/value', (data) => {
+  return console.log(data);
+});
+~~~
+
+## [Set(...params)](./index.js#49)
+**Use this function to set values inside the object.**
+
+- **Params**:
+  - **Path**:
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Value**:
+    - **Type:** `Any`
+    - **Required:** `true`
+    - **Example:** `your value`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
+  
+~~~javascript
+// Without using callback:
+myObjectManager.set('path/to/value', true);
+console.log(myObject);
+
+// Using callback:
+myObjectManager.set('path/to/value', true, (data) => {
+  return console.log(data);
+});
+~~~
+
+## [Set(...params)](./index.js#49)
+**Use this function to set values inside the object.**
+
+- **Params**:
+  - **Path**:
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Value**:
+    - **Type:** `Any`
+    - **Required:** `true`
+    - **Example:** `your value`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
+  
+~~~javascript
+// Without using callback:
+myObjectManager.set('path/to/value', true);
+console.log(myObject);
+
+// Using callback:
+myObjectManager.set('path/to/value', true, (data) => {
+  return console.log(data);
+});
+~~~
+
+## [Set(...params)](./index.js#49)
+**Use this function to set values inside the object.**
+
+- **Params**:
+  - **Path**:
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Value**:
+    - **Type:** `Any`
+    - **Required:** `true`
+    - **Example:** `your value`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
+  
+~~~javascript
+// Without using callback:
+myObjectManager.set('path/to/value', true);
+console.log(myObject);
+
+// Using callback:
+myObjectManager.set('path/to/value', true, (data) => {
+  return console.log(data);
+});
+~~~
+
+## [Set(...params)](./index.js#49)
+**Use this function to set values inside the object.**
+
+- **Params**:
+  - **Path**:
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Value**:
+    - **Type:** `Any`
+    - **Required:** `true`
+    - **Example:** `your value`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
+  
+~~~javascript
+// Without using callback:
+myObjectManager.set('path/to/value', true);
+console.log(myObject);
+
+// Using callback:
+myObjectManager.set('path/to/value', true, (data) => {
+  return console.log(data);
+});
+~~~
+
+## [Set(...params)](./index.js#49)
+**Use this function to set values inside the object.**
+
+- **Params**:
+  - **Path**:
+    - **Type**: `String`
+    - **Required**: `true`
+    - **Example**: `'path/to/value'`
+  - **Value**:
+    - **Type:** `Any`
+    - **Required:** `true`
+    - **Example:** `your value`
+  - **Callback**:
+    - **Type:** `Function`
+    - **Required:** `False`
+    - **Example:** `(data) => console.log(data)`
+  
+~~~javascript
+// Without using callback:
+myObjectManager.set('path/to/value', true);
+console.log(myObject);
+
+// Using callback:
+myObjectManager.set('path/to/value', true, (data) => {
+  return console.log(data);
 });
 ~~~

@@ -5,9 +5,7 @@
 </div>
 
 # Set(...params)
-Use this function to set values inside the object.
-
-If you want to see the code, [click here!](../index.js#L49)
+> Use this function to set values inside the object.
 
 - Params:
   - Path:
@@ -22,6 +20,8 @@ If you want to see the code, [click here!](../index.js#L49)
     - Type: `Function`
     - Required: `false`
     - Example: `(data) => console.log(data)`
+
+- **If you want to see the code, [click here!](../index.js#L49)**
 
 ---
 

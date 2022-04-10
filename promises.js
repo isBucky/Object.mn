@@ -92,7 +92,7 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be deleted.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Promise<Object>}
+   * @return {Promise<Object>}
    */
   async delete(...args) {
     let { path, callbackData } = await this.#resolveParams(false, ...args);

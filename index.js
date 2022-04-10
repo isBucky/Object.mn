@@ -19,7 +19,7 @@ class ObjectManagerError extends TypeError {
 class ObjectManager {
   /**
    * @param {Object} [objectData] Source object to save the information.
-   * @param {String} [split] Query path separator.
+   * @param {?String} [split] Query path separator.
    */
   constructor(objectData, split = null) {
     if (!objectData || typeof objectData !== 'object') throw new ObjectManagerError('You haven\'t defined an object to be managed, received:', typeof objectData);
@@ -38,11 +38,11 @@ class ObjectManager {
   }
   
   /**
+   * Use this function to set values inside the object.
    * 
-   * 
-   * @param {String} [path]
-   * @param {Any} [value]
-   * @param {Function} [callback]
+   * @param {String} [path] Path where the value will be set. Path where the value will be set.
+   * @param {Any} [value] A value to be set on the object.
+   * @param {?Function} [callback] Return the result in callback. Return the result in callback.
    * 
    * @return {Object}
    */
@@ -68,9 +68,10 @@ class ObjectManager {
   }
   
   /**
+   * Use this function to get values inside the object.
    * 
-   * @param {String} [path]
-   * @param {Function} [callback]
+   * @param {String} [path] Path where the value will be get.
+   * @param {?Function} [callback] Return the result in callback.
    * 
    * @return {Any}
    */
@@ -87,9 +88,10 @@ class ObjectManager {
   }
   
   /**
+   * Use this function to delete a specific value in the object.
    * 
-   * @param {String} [path]
-   * @param {Function} [callbackl]
+   * @param {String} [path] Path where the value will be deleted.
+   * @param {?Function} [callback] Return the result in callback.
    * 
    * @return {Object}
    */
@@ -114,10 +116,13 @@ class ObjectManager {
   }
   
   /**
+   * Use this function to update object elements.
    * 
-   * @param {String} []
-   * @param {Object} []
-   * @param {Function} []
+   * @param {String} [path] Path where the value will be update.
+   * @param {Object} [value] Value in object to update elements of the initial object.
+   * @param {?Function} [callback] Return the result in callback.
+   * 
+   * @return {Object}
    */
   update(...args) {
     let { path, value, callbackData } = this.#resolveParams(true, ...args);
@@ -132,11 +137,28 @@ class ObjectManager {
     return this.#resolveCallback(callbackData, this.objectData);
   }
   
+  /**
+   * Use this function to check the existence of a value in the object.
+   * 
+   * @param {String} [path] Path where the value will be checked.
+   * @param {?Function} [callback] Return the result in callback.
+   * 
+   * @return {Boolean}
+   */
   has(...args) {
     let { path, callbackData } = this.#resolveCallback(false, ...args);
     return this.#resolveCallback(callbackData, !!this.get(path));
   }
   
+  /**
+   * Use this function to insert/create an Array in the object.
+   * 
+   * @param {String} [path] Path where the value will be set.
+   * @param {Any} [value] Value to be inserted into the Array.
+   * @param {?Function} [callback] Return the result in callback.
+   * 
+   * @return {Object}
+   */
   push(...args) {
     let { path, value, callbackData } = this.#resolveParams(true, ...args);
     try {
@@ -149,26 +171,67 @@ class ObjectManager {
     } catch(_) { return this.#resolveCallback(callbackData, null); }
   }
   
+  /**
+   * Use this function to return all the Keys of the object.
+   * 
+   * @param {String} [path] Path where the value will be set.
+   * @param {?Function} [callback] Return the result in callback.
+   * 
+   * @return {Array}
+   */
   keys(...args) {
     let { path, callbackData } = this.#resolveParams(false, ...args);
     return this.#resolveCallback(callbackData, Object.keys(this.get(path) ?? {}));
   }
   
+  /**
+   * Use this function to return all the Values of the object.
+   * 
+   * @param {String} [path] Path where the value will be set.
+   * @param {?Function} [callback] Return the result in callback.
+   * 
+   * @return {Array}
+   */
   values(...args) {
     let { path, callbackData } = this.#resolveParams(false, ...args);
     return this.#resolveCallback(callbackData, Object.values(this.get(path) ?? {}));
   }
   
+  /**
+   * Use this function to return all the Entries of the object.
+   * 
+   * @param {String} [path] Path where the value will be set.
+   * @param {?Function} [callback] Return the result in callback.
+   * 
+   * @return {Array}
+   */
   entries(...args) {
     let { path, callbackData } = this.#resolveParams(false, ...args);
     return this.#resolveCallback(callbackData, Object.entries(this.get(path) ?? {}));
   }
   
+  /**
+   * Use this function to transform an object into a string.
+   * 
+   * @param {String} [path] Path where the value will be set.
+   * @param {?Function} [callback] Return the result in callback.
+   * 
+   * @return {String}
+   */
   toJSON(...args) {
     let { path, callbackData } = this.#resolveParams(false, ...args);
     return this.#resolveCallback(callbackData, JSON.stringify(this.get(path) ?? {}));
   }
   
+  /**
+   * This function is used to check the parameters of functions.
+   * 
+   * @private
+   * @param {Boolean} [requiredValue] Is the "value" parameter mandatory?
+   * @param {Any} [...args] Parameters passed by the function.
+   * 
+   * @return {Object}
+   */
   #resolveParams(requiredValue, ...args) {
     let [path, value, callbackData] = args;
     
@@ -182,6 +245,15 @@ class ObjectManager {
     return { path, value, callbackData };
   }
   
+  /**
+   * This function is used to decide whether to use the callback or not.
+   * 
+   * @private
+   * @param {Function} [callbackData] Function that will be executed passing the information in the parameters.
+   * @param {Any} [data] Value that will be passed in the callback parameter, if used.
+   * 
+   * @return {Any | Undefined}
+   */
   #resolveCallback(callbackData, data) {
     if (callbackData && typeof callbackData == 'function') return callbackData(data);
     else return data;

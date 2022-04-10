@@ -5,9 +5,16 @@
 </div>
 
 # Table of methods
-- [Set()](#setparams)
-- [Get()](#getparams)
-- [Delete()](#deleteparams)
+- [Set(...params)](#setparams)
+- [Get(...params)](#getparams)
+- [Delete(...params)](#deleteparams)
+- [Update(...params)](#updateparams)
+- [Has(...params)](#hasparams)
+- [Push(...params)](#pushparams)
+- [Keys(...params)](#keysparams)
+- [Values(...params)](#valuesparams)
+- [Entries(...params)](#entriesparams)
+- [ToJSON(...params)](#tojsonparams)
 
 # Set(...params)
 > Use this function to set values inside the object.
@@ -20,7 +27,7 @@
   - Value
     - Type: `Any`
     - Required: `true`
-    - Example: `your value`
+    - Example: `'your value'`
   - Callback
     - Type: `Function`
     - Required: `false`
@@ -72,19 +79,17 @@ import ObjectManager from 'object.mn';
 let
   myObject = {
     path: {
-      to: { value: true }
+      to: { value: 'myValue' }
     }
   },
   myObjectManager = new ObjectManager(myObject);
   
 // Without using callback:
 let data = myObjectManager.get('path/to/value');
-console.log(data); // output: true
+console.log(data); // output: 'myValue'
 
 // Using callback:
-myObjectManager.get('path/to/value', (data) => {
-  console.log(data); // output: true
-});
+myObjectManager.get('path/to/value', console.log); // output: 'myValue'
 ~~~
 
 # Delete(...params)
@@ -124,6 +129,136 @@ console.log(myObject); // output: { path: { to: {} } }
 myObjectManager.delete('path/to/value', (data) => {
   console.log(data); // output: { path: { to: {} } }
   console.log(myObject); // output: { path: { to: {} } }
+});
+~~~
+
+# Update(...params)
+> Use this function to update object elements..
+
+- Params
+  - Path
+    - Type: `String`
+    - Required: `true`
+    - Example: `path/to/value`
+  - Value
+    - Type: `Object`
+    - Required: `true`
+    - Example: `{ key: 'value' }`
+  - Callback
+    - Type: `Function`
+    - Required: `false`
+    - Example: `(data) => console.log(data)`
+
+- **If you want to see the code, [click here!](../index.js#L127)**
+
+---
+
+## Example
+~~~javascript
+import ObjectManager from 'object.mn';
+
+let
+  myObject = {
+    path: {
+      to: { value: true }
+    }
+  },
+  myObjectManager = new ObjectManager(myObject);
+  
+// Without using callback:
+console.log(myObjectManager.update('path/to', {
+  value: false,
+  key: 'value'
+})); // output: { path: { to: { value: false, key: 'value' } } }
+console.log(myObject); // output: { path: { to: { value: false, key: 'value' } }
+
+// Using callback:
+myObjectManager.update('path/to', {
+  value: false,
+  key: 'value'
+}, (data) => {
+  console.log(data); // output: { path: { to: { value: false, key: 'value' } }
+  console.log(myObject); // output: { path: { to: { value: false, key: 'value' } }
+});
+~~~
+
+# Has(...params)
+> Use this function to check the existence of a value in the object.
+
+- Params
+  - Path
+    - Type: `String`
+    - Required: `true`
+    - Example: `path/to/value`
+  - Callback
+    - Type: `Function`
+    - Required: `false`
+    - Example: `(data) => console.log(data)`
+
+- **If you want to see the code, [click here!](../index.js#L148)**
+
+---
+
+## Example
+~~~javascript
+import ObjectManager from 'object.mn';
+
+let myObject = { key: 'value' },
+  myObjectManager = new ObjectManager(myObject);
+  
+// Without using callback:
+console.log(myObjectManager.has('key')); // output: true
+console.log(myObjectManager.has('value')); // output: false
+
+// Using callback:
+myObjectManager.had('key', console.log); // output: true
+myObjectManager.had('value', console.log); // output: false
+~~~
+
+# Push(...params)
+> Use this function to insert/create an Array in the object.
+
+- Params
+  - Path
+    - Type: `String`
+    - Required: `true`
+    - Example: `path/to/value`
+  - Value
+    - Type: `Any`
+    - Required: `true`
+    - Example: `'your value'`
+  - Callback
+    - Type: `Function`
+    - Required: `false`
+    - Example: `(data) => console.log(data)`
+
+- **If you want to see the code, [click here!](../index.js#L162)**
+
+---
+
+## Example
+~~~javascript
+import ObjectManager from 'object.mn';
+
+let myObject = {},
+  myObjectManager = new ObjectManager(myObject);
+  
+// Without using callback:
+console.log(myObjectManager.push('github/profiles', [
+  'isBucky',
+  '7Silva',
+  '7Johnsz'
+])); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
+console.log(myObject); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
+
+// Using callback:
+myObjectManager.set('github/profiles', [
+  'isBucky',
+  '7Silva',
+  '7Johnsz'
+], (data) => {
+  console.log(data); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
+  console.log(myObject); // output: { github: { devs: ['isBucky', '7Silva', '7Johnsz'] } }
 });
 ~~~
 

@@ -146,7 +146,7 @@ class ObjectManager {
    * @return {Boolean}
    */
   has(...params) {
-    let { path, callbackData } = this.#resolveCallback(false, ...params);
+    let { path, callbackData } = this.#resolveParams(false, ...params);
     return this.#resolveCallback(callbackData, !!this.get(path));
   }
   

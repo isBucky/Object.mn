@@ -57,6 +57,8 @@ class ObjectManager {
         return this.#resolveCallback(callbackData, this.objectData);
       }
       
+      if 
+      
       let currentObjectData = this.objectData,
         lastKeyPath = path.pop();
         
@@ -83,7 +85,10 @@ class ObjectManager {
     
     try {
       return this.#resolveCallback(callbackData,
-        path.reduce((a, b) => (a ?? {})[b], this.objectData));
+        path.reduce((data, key) => {
+          if (Array.isArray(data)) data = Object.assign({}, data);
+          return (data ?? {})[key];
+        }, this.objectData));
     } catch(_) { return this.#resolveCallback(callbackData, null); }
   }
   

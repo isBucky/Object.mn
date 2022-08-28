@@ -60,9 +60,14 @@ class ObjectManager {
       let currentObjectData = this.objectData,
         lastKeyPath = path.pop();
         
-      for (let key of path) currentObjectData = (currentObjectData[key] = (currentObjectData[key] ?? {}));
-        currentObjectData[lastKeyPath] = value;
-        
+      for (let key of path) currentObjectData = (currentObjectData[key] = 
+        currentObjectData[key]
+          ? !(typeof currentObjectData[key] == 'string')
+            ? currentObjectData[key]
+            : {}
+          : {});
+      currentObjectData[lastKeyPath] = value;
+      
       return currentObjectData;
     } catch(err) { throw err; }
   }
@@ -82,7 +87,10 @@ class ObjectManager {
     if (!path.length) return this.objectData;
     
     try {
-      return path.reduce((a, b) => (a ?? {})[b], this.objectData);
+      return path.reduce((data, key) => {
+        if (Array.isArray(data)) data = Object.assign({}, data);
+        return (data ?? {})[key];
+      }, this.objectData);
     } catch(_) { return null; }
   }
   

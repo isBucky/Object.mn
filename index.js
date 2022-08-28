@@ -57,14 +57,17 @@ class ObjectManager {
         return this.#resolveCallback(callbackData, this.objectData);
       }
       
-      if 
-      
       let currentObjectData = this.objectData,
         lastKeyPath = path.pop();
         
-      for (let key of path) currentObjectData = (currentObjectData[key] = (currentObjectData[key] ?? {}));
-        currentObjectData[lastKeyPath] = value;
-        
+      for (let key of path) currentObjectData = (currentObjectData[key] = 
+        currentObjectData[key]
+          ? !(typeof currentObjectData[key] == 'string')
+            ? currentObjectData[key]
+            : {}
+          : {});
+      currentObjectData[lastKeyPath] = value;
+      
       return this.#resolveCallback(callbackData, currentObjectData);
     } catch(err) { throw err; }
   }

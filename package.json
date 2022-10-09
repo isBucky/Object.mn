@@ -1,9 +1,9 @@
 {
   "name": "object.mn",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "An npm with various functions to manage objects.",
   "main": "dist/index.js",
-  "types": "types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "files": [
     "src",
     "dist"

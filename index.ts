@@ -7,7 +7,7 @@
  * @extends {TypeError}
  */
 class ObjectManagerError extends TypeError {
-  constructor(...args) {
+  constructor(...args: any[]) {
     super(args.join(' '));
   }
 }
@@ -17,11 +17,14 @@ class ObjectManagerError extends TypeError {
  * @class ObjectManager
  */
 class ObjectManager {
+    public objectData: any;
+    public split: string;
+
   /**
    * @param {Object} [objectData] Source object to save the information.
    * @param {?String} [split] Query path separator.
    */
-  constructor(objectData, split = null) {
+  constructor(objectData: object, split: string | null = null) {
     if (!objectData || typeof objectData !== 'object') throw new ObjectManagerError('You haven\'t defined an object to be managed, received:', typeof objectData);
     if (split && typeof split !== 'string') throw new ObjectManagerError('You have not defined a valid split, received:', typeof split);
     
@@ -46,29 +49,29 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  set(...params) {
-    let { path, value, callbackData } = this.#resolveParams(true, ...params);
-      path = path.split(this.split).filter(Boolean);
+  public set(...params: [string, any, Function?]): any {
+    let { path, value, callbackData } = this.#resolveParams(true, ...params),
+      pathSplit = path.split(this.split).filter(Boolean);
       
     try {
-      if (!path.length) {
+      if (!pathSplit.length) {
         if (typeof value !== 'object') throw new ObjectManagerError('For this the value has to be an object, received:', typeof value);
         for (let key in value) this.objectData[key] = (value[key] ?? null);
-        return this.#resolveCallback(callbackData, this.objectData);
+        return this.#resolveCallback(callbackData!, this.objectData);
       }
       
       let currentObjectData = this.objectData,
-        lastKeyPath = path.pop();
+        lastKeyPath = pathSplit.pop();
         
-      for (let key of path) currentObjectData = (currentObjectData[key] = 
+      for (let key of pathSplit) currentObjectData = (currentObjectData[key] = 
         currentObjectData[key]
           ? !(typeof currentObjectData[key] == 'string')
             ? currentObjectData[key]
             : {}
           : {});
-      currentObjectData[lastKeyPath] = value;
+      currentObjectData[lastKeyPath!] = value;
       
-      return this.#resolveCallback(callbackData, currentObjectData);
+      return this.#resolveCallback(callbackData!, currentObjectData);
     } catch(err) { throw err; }
   }
   
@@ -80,19 +83,18 @@ class ObjectManager {
    * 
    * @return {Any}
    */
-  get(...params) {
-    let { path, callbackData } = this.#resolveParams(false, ...params);
-    
-    path = path.split(this.split).filter(Boolean);
-    if (!path.length) return this.objectData;
+  public get(...params: [string, Function?]): any {
+    let { path, callbackData } = this.#resolveParams(false, ...params),
+      pathSplit = path.split(this.split).filter(Boolean);
+    if (!pathSplit.length) return this.objectData;
     
     try {
-      return this.#resolveCallback(callbackData,
-        path.reduce((data, key) => {
+      return this.#resolveCallback(callbackData!,
+        pathSplit.reduce((data, key) => {
           if (Array.isArray(data)) data = Object.assign({}, data);
           return (data ?? {})[key];
         }, this.objectData));
-    } catch(_) { return this.#resolveCallback(callbackData, null); }
+    } catch(_) { return this.#resolveCallback(callbackData!, null); }
   }
   
   /**
@@ -103,23 +105,23 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  delete(...params) {
-    let { path, callbackData } = this.#resolveParams(false, ...params);
-      path = path.split(this.split).filter(Boolean);
+  public delete(...params: [string, Function?]): any {
+    let { path, callbackData } = this.#resolveParams(false, ...params),
+      pathSplit = path.split(this.split).filter(Boolean);
       
     try {
-      if (!path.length) {
+      if (!pathSplit.length) {
         delete this.objectData; this.objectData = {};
-        return this.#resolveCallback(callbackData, this.objectData);
+        return this.#resolveCallback(callbackData!, this.objectData);
       }
       
       let currentObjectData = this.objectData,
-        lastKeyPath = path.pop();
+        lastKeyPath = pathSplit.pop();
         
       for (let key of path) currentObjectData = (currentObjectData[key] = (currentObjectData[key] ?? {}));
-        delete currentObjectData[lastKeyPath];
+        delete currentObjectData[lastKeyPath!];
         
-      return this.#resolveCallback(callbackData, this.objectData);
+      return this.#resolveCallback(callbackData!, this.objectData);
     } catch(_) {}
   }
   
@@ -132,17 +134,17 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  update(...params) {
+  public update(...params: [string, any, Function?]): any {
     let { path, value, callbackData } = this.#resolveParams(true, ...params);
     if (typeof value !== 'object') throw new ObjectManagerError('The value can only be of type object, received:', typeof value);
     
     if (path == this.split) {
       this.set(path, value);
-      this.#resolveCallback(callbackData, this.objectData);
+      this.#resolveCallback(callbackData!, this.objectData);
     }
     
     for (let key in value) this.set(path + this.split + key, value[key]);
-    return this.#resolveCallback(callbackData, this.objectData);
+    return this.#resolveCallback(callbackData!, this.objectData);
   }
   
   /**
@@ -153,9 +155,9 @@ class ObjectManager {
    * 
    * @return {Boolean}
    */
-  has(...params) {
+  public has(...params: [string, Function?]): boolean {
     let { path, callbackData } = this.#resolveParams(false, ...params);
-    return this.#resolveCallback(callbackData, !!this.get(path));
+    return this.#resolveCallback(callbackData!, !!this.get(path));
   }
   
   /**
@@ -167,7 +169,7 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  push(...params) {
+  public push(...params: [string, any, Function?]): any[] {
     let { path, value, callbackData } = this.#resolveParams(true, ...params);
     try {
       let data = this.get(path);
@@ -176,7 +178,7 @@ class ObjectManager {
       value = Array.isArray(value) ? value : [value];
         data.push(...value);
       return this.set(path, data, callbackData);
-    } catch(_) { return this.#resolveCallback(callbackData, null); }
+    } catch(_) { return this.#resolveCallback(callbackData!, null); }
   }
   
   /**
@@ -187,9 +189,9 @@ class ObjectManager {
    * 
    * @return {Array}
    */
-  keys(...params) {
+  public keys(...params: [string, Function?]): string[] {
     let { path, callbackData } = this.#resolveParams(false, ...params);
-    return this.#resolveCallback(callbackData, Object.keys(this.get(path) ?? {}));
+    return this.#resolveCallback(callbackData!, Object.keys(this.get(path) ?? {}));
   }
   
   /**
@@ -200,9 +202,9 @@ class ObjectManager {
    * 
    * @return {Array}
    */
-  values(...params) {
+  public values(...params: [string, Function?]): string[] {
     let { path, callbackData } = this.#resolveParams(false, ...params);
-    return this.#resolveCallback(callbackData, Object.values(this.get(path) ?? {}));
+    return this.#resolveCallback(callbackData!, Object.values(this.get(path) ?? {}));
   }
   
   /**
@@ -213,9 +215,9 @@ class ObjectManager {
    * 
    * @return {Array}
    */
-  entries(...params) {
+  public entries(...params: [string, Function?]): any[][] {
     let { path, callbackData } = this.#resolveParams(false, ...params);
-    return this.#resolveCallback(callbackData, Object.entries(this.get(path) ?? {}));
+    return this.#resolveCallback(callbackData!, Object.entries(this.get(path) ?? {}));
   }
   
   /**
@@ -226,9 +228,9 @@ class ObjectManager {
    * 
    * @return {String}
    */
-  toJSON(...params) {
+  public toJSON(...params: [string, Function?]): string {
     let { path, callbackData } = this.#resolveParams(false, ...params);
-    return this.#resolveCallback(callbackData, JSON.stringify(this.get(path) ?? {}));
+    return this.#resolveCallback(callbackData!, JSON.stringify(this.get(path) ?? {}));
   }
   
   /**
@@ -240,7 +242,7 @@ class ObjectManager {
    * 
    * @return {Object}
    */
-  #resolveParams(requiredValue, ...params) {
+  #resolveParams(requiredValue: boolean, ...params: [string, any, Function?]): { path: string; value: any; callbackData?: Function; } {
     let [path, value, callbackData] = params;
     
     if (!path || typeof path !== 'string') throw new ObjectManagerError('The path has to be a string, reveived:', typeof path);
@@ -262,10 +264,13 @@ class ObjectManager {
    * 
    * @return {Any | Undefined}
    */
-  #resolveCallback(callbackData, data) {
+  #resolveCallback(callbackData: Function, data: any) {
     if (callbackData && typeof callbackData == 'function') return callbackData(data);
     else return data;
   }
 }
 
-module.exports = ObjectManager;
+export {
+    ObjectManager,
+    ObjectManager as default
+}

@@ -7,7 +7,7 @@
  * @extends {TypeError}
  */
 class ObjectManagerError extends TypeError {
-  constructor(...args) {
+  constructor(...args: any[]) {
     super(args.join(' '));
   }
 }
@@ -17,11 +17,14 @@ class ObjectManagerError extends TypeError {
  * @class ObjectManager
  */
 class ObjectManager {
+    public objectData: any;
+    public split: string;
+
   /**
    * @param {Object} [objectData] Source object to save the information.
    * @param {?String} [split] Query path separator.
    */
-  constructor(objectData, split = null) {
+  constructor(objectData: object, split: string | null = null) {
     if (!objectData || typeof objectData !== 'object') throw new ObjectManagerError('You haven\'t defined an object to be managed, received:', typeof objectData);
     if (split && typeof split !== 'string') throw new ObjectManagerError('You have not defined a valid split, received:', typeof split);
     
@@ -40,35 +43,35 @@ class ObjectManager {
   /**
    * Use this function to set values inside the object.
    * 
-   * @param {String} [path] Path where the value will be set. Path where the value will be set.
+   * @param {String} [path] Path where the value will be set.
    * @param {Any} [value] A value to be set on the object.
-   * @param {?Function} [callback] Return the result in callback. Return the result in callback.
+   * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Object>}
+   * @return {Promise<any>}
    */
-  async set(...params) {
-    let { path, value } = await this.#resolveParams(true, ...params);
-      path = path.split(this.split).filter(Boolean);
+  public async set(...params: [string, any, Function?]): Promise<any> {
+    let { path, value, callbackData } = this.#resolveParams(true, ...params),
+      pathSplit = path.split(this.split).filter(Boolean);
       
     try {
-      if (!path.length) {
+      if (!pathSplit.length) {
         if (typeof value !== 'object') throw new ObjectManagerError('For this the value has to be an object, received:', typeof value);
         for (let key in value) this.objectData[key] = (value[key] ?? null);
-        return this.objectData;
+        return this.#resolveCallback(callbackData!, this.objectData);
       }
       
       let currentObjectData = this.objectData,
-        lastKeyPath = path.pop();
+        lastKeyPath = pathSplit.pop();
         
-      for (let key of path) currentObjectData = (currentObjectData[key] = 
+      for (let key of pathSplit) currentObjectData = (currentObjectData[key] = 
         currentObjectData[key]
           ? !(typeof currentObjectData[key] == 'string')
             ? currentObjectData[key]
             : {}
           : {});
-      currentObjectData[lastKeyPath] = value;
+      currentObjectData[lastKeyPath!] = value;
       
-      return currentObjectData;
+      return this.#resolveCallback(callbackData!, currentObjectData);
     } catch(err) { throw err; }
   }
   
@@ -78,20 +81,20 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be get.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Any>}
+   * @return {Promise<any>}
    */
-  async get(...params) {
-    let { path } = await this.#resolveParams(false, ...params);
-    
-    path = path.split(this.split).filter(Boolean);
-    if (!path.length) return this.objectData;
+  public async get(...params: [string, Function?]): Promise<any> {
+    let { path, callbackData } = this.#resolveParams(false, ...params),
+      pathSplit = path.split(this.split).filter(Boolean);
+    if (!pathSplit.length) return this.objectData;
     
     try {
-      return path.reduce((data, key) => {
-        if (Array.isArray(data)) data = Object.assign({}, data);
-        return (data ?? {})[key];
-      }, this.objectData);
-    } catch(_) { return null; }
+      return this.#resolveCallback(callbackData!,
+        pathSplit.reduce((data, key) => {
+          if (Array.isArray(data)) data = Object.assign({}, data);
+          return (data ?? {})[key];
+        }, this.objectData));
+    } catch(_) { return this.#resolveCallback(callbackData!, null); }
   }
   
   /**
@@ -100,25 +103,25 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be deleted.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Object>}
+   * @return {Promise<any>}
    */
-  async delete(...params) {
-    let { path } = await this.#resolveParams(false, ...params);
-      path = path.split(this.split).filter(Boolean);
+  public async delete(...params: [string, Function?]): Promise<any> {
+    let { path, callbackData } = this.#resolveParams(false, ...params),
+      pathSplit = path.split(this.split).filter(Boolean);
       
     try {
-      if (!path.length) {
+      if (!pathSplit.length) {
         delete this.objectData; this.objectData = {};
-        return this.objectData;
+        return this.#resolveCallback(callbackData!, this.objectData);
       }
       
       let currentObjectData = this.objectData,
-        lastKeyPath = path.pop();
+        lastKeyPath = pathSplit.pop();
         
       for (let key of path) currentObjectData = (currentObjectData[key] = (currentObjectData[key] ?? {}));
-        delete currentObjectData[lastKeyPath];
+        delete currentObjectData[lastKeyPath!];
         
-      return this.objectData;
+      return this.#resolveCallback(callbackData!, this.objectData);
     } catch(_) {}
   }
   
@@ -129,19 +132,19 @@ class ObjectManager {
    * @param {Object} [value] Value in object to update elements of the initial object.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Object>}
+   * @return {Promise<any>}
    */
-  async update(...params) {
-    let { path, value } = await this.#resolveParams(true, ...params);
+  public async update(...params: [string, any, Function?]): Promise<any> {
+    let { path, value, callbackData } = this.#resolveParams(true, ...params);
     if (typeof value !== 'object') throw new ObjectManagerError('The value can only be of type object, received:', typeof value);
     
     if (path == this.split) {
       await this.set(path, value);
-      this.objectData;
+      this.#resolveCallback(callbackData!, this.objectData);
     }
     
     for (let key in value) await this.set(path + this.split + key, value[key]);
-    return this.objectData;
+    return this.#resolveCallback(callbackData!, this.objectData);
   }
   
   /**
@@ -150,11 +153,11 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be checked.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Boolean>}
+   * @return {Promise<boolean>}
    */
-  async has(...params) {
-    let { path } = await this.#resolveParams(false, ...params);
-    return !!(await this.get(path));
+  public async has(...params: [string, Function?]): Promise<boolean> {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
+    return this.#resolveCallback(callbackData!, !!(await this.get(path)));
   }
   
   /**
@@ -164,18 +167,18 @@ class ObjectManager {
    * @param {Any} [value] Value to be inserted into the Array.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Object>}
+   * @return {Promise<any[]>}
    */
-  async push(...params) {
-    let { path, value } = await this.#resolveParams(true, ...params);
+  public async push(...params: [string, any, Function?]): Promise<any[]> {
+    let { path, value, callbackData } = this.#resolveParams(true, ...params);
     try {
       let data = await this.get(path);
       if (!Array.isArray(data)) data = [];
       
       value = Array.isArray(value) ? value : [value];
         data.push(...value);
-      return this.set(path, data);
-    } catch(_) { return null; }
+      return await this.set(path, data, callbackData);
+    } catch(_) { return this.#resolveCallback(callbackData!, null); }
   }
   
   /**
@@ -184,11 +187,11 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be set.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Array>}
+   * @return {Promise<string[]>}
    */
-  async keys(...params) {
-    let { path } = await this.#resolveParams(false, ...params);
-    return Object.keys((await this.get(path)) ?? {});
+  public async keys(...params: [string, Function?]): Promise<string[]> {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
+    return this.#resolveCallback(callbackData!, Object.keys((await this.get(path)) ?? {}));
   }
   
   /**
@@ -197,11 +200,11 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be set.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Array>}
+   * @return {Promise<any[]>}
    */
-  async values(...params) {
-    let { path } = await this.#resolveParams(false, ...params);
-    return Object.values((await this.get(path)) ?? {});
+  public async values(...params: [string, Function?]): Promise<string[]> {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
+    return this.#resolveCallback(callbackData!, Object.values(this.get(path) ?? {}));
   }
   
   /**
@@ -210,11 +213,11 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be set.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<Array>}
+   * @return {Promise<any[][]>}
    */
-  async entries(...params) {
-    let { path } = await this.#resolveParams(false, ...params);
-    return Object.entries((await this.get(path)) ?? {});
+  public async entries(...params: [string, Function?]): Promise<any[][]> {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
+    return this.#resolveCallback(callbackData!, Object.entries((await this.get(path)) ?? {}));
   }
   
   /**
@@ -223,11 +226,11 @@ class ObjectManager {
    * @param {String} [path] Path where the value will be set.
    * @param {?Function} [callback] Return the result in callback.
    * 
-   * @return {Promise<String>}
+   * @return {Promise<string>}
    */
-  async toJSON(...params) {
-    let { path } = await this.#resolveParams(false, ...params);
-    return JSON.stringify((await this.get(path)) ?? {});
+  public async toJSON(...params: [string, Function?]): Promise<string> {
+    let { path, callbackData } = this.#resolveParams(false, ...params);
+    return this.#resolveCallback(callbackData!, JSON.stringify((await this.get(path)) ?? {}));
   }
   
   /**
@@ -237,17 +240,37 @@ class ObjectManager {
    * @param {Boolean} [requiredValue] Is the "value" parameter mandatory?
    * @param {Any} [...params] Parameters passed by the function.
    * 
-   * @return {Promise<Object>}
+   * @return {Object}
    */
-  async #resolveParams(requiredValue, ...params) {
-    let [path, value] = params;
+  #resolveParams(requiredValue: boolean, ...params: [string, any, Function?]): { path: string; value: any; callbackData?: Function; } {
+    let [path, value, callbackData] = params;
     
     if (!path || typeof path !== 'string') throw new ObjectManagerError('The path has to be a string, reveived:', typeof path);
     if (requiredValue && !value && value !== 0) throw new ObjectManagerError('You have not set a valid value, received:', typeof value);
     if (requiredValue && typeof value == 'function') throw new ObjectManagerError('The value cannot be of type Function!');
+    if (typeof value == 'function') {
+      callbackData = value; value = undefined;
+    } else if (!requiredValue) value = undefined;
     
-    return { path, value };
+    return { path, value, callbackData };
+  }
+  
+  /**
+   * This function is used to decide whether to use the callback or not.
+   * 
+   * @private
+   * @param {Function} [callbackData] Function that will be executed passing the information in the parameters.
+   * @param {Any} [data] Value that will be passed in the callback parameter, if used.
+   * 
+   * @return {Any | Undefined}
+   */
+  #resolveCallback(callbackData: Function, data: any) {
+    if (callbackData && typeof callbackData == 'function') return callbackData(data);
+    else return data;
   }
 }
 
-module.exports = ObjectManager;
+export {
+    ObjectManager,
+    ObjectManager as default
+}

@@ -2,7 +2,7 @@
  * Class responsible for the object manager.
  * @class ObjectManager
  */
-declare class ObjectManager {
+export default class ObjectManager {
     #private;
     objectData: any;
     split: string;
@@ -105,4 +105,3 @@ declare class ObjectManager {
      */
     toJSON(...params: [string, Function?]): string;
 }
-export { ObjectManager, ObjectManager as default };

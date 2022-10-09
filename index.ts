@@ -16,7 +16,7 @@ class ObjectManagerError extends TypeError {
  * Class responsible for the object manager.
  * @class ObjectManager
  */
-class ObjectManager {
+export default class ObjectManager {
     public objectData: any;
     public split: string;
 
@@ -268,9 +268,4 @@ class ObjectManager {
     if (callbackData && typeof callbackData == 'function') return callbackData(data);
     else return data;
   }
-}
-
-export {
-    ObjectManager,
-    ObjectManager as default
 }

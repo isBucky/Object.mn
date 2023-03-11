@@ -25,14 +25,14 @@ export default class ObjectManager {
    * @param {?String} [split] Query path separator.
    */
   constructor(objectData: object, split: string | null = null) {
-    if (!objectData || typeof objectData !== 'object') throw new ObjectManagerError('You haven\'t defined an object to be managed, received:', typeof objectData);
+    if (objectData && typeof objectData !== 'object') throw new ObjectManagerError('You haven\'t defined an object to be managed, received:', typeof objectData);
     if (split && typeof split !== 'string') throw new ObjectManagerError('You have not defined a valid split, received:', typeof split);
     
     /**
      * Here is the object you defined to be managed.
      * @type {Object}
      */
-    this.objectData = objectData;
+    this.objectData = objectData ?? {};
     /**
      * This variable contains the query path separator.
      * @type {String}
@@ -106,21 +106,21 @@ export default class ObjectManager {
    * @return {Promise<any>}
    */
   public async delete(...params: [string, Function?]): Promise<any> {
-    let { path, callbackData } = this.#resolveParams(false, ...params),
+    const { path, callbackData } = this.#resolveParams(false, ...params),
       pathSplit = path.split(this.split).filter(Boolean);
       
     try {
       if (!pathSplit.length) {
-        delete this.objectData; this.objectData = {};
+        delete this.objectData;
+        this.objectData = {};
+
         return this.#resolveCallback(callbackData!, this.objectData);
       }
       
-      let currentObjectData = this.objectData,
-        lastKeyPath = pathSplit.pop();
-        
-      for (let key of path) currentObjectData = (currentObjectData[key] = (currentObjectData[key] ?? {}));
-        delete currentObjectData[lastKeyPath!];
-        
+      let currentObjectData = this.objectData;
+      if (pathSplit.length > 1) for (let key of path) currentObjectData = (currentObjectData[key] = (currentObjectData[key] ?? {}));
+
+      delete currentObjectData[pathSplit.pop()!];
       return this.#resolveCallback(callbackData!, this.objectData);
     } catch(_) {}
   }

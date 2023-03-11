@@ -1,20 +1,36 @@
 {
   "name": "object.mn",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "An npm with various functions to manage objects.",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/types/index.d.ts",
-  "files": [
-    "src",
-    "dist"
-  ],
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/isBucky/Object.mn.git"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./promises": "./dist/Promises.js"
+    ".": {
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.mjs"
+      }
+    },
+    "./promises": {
+      "require": {
+        "types": "./dist/types/Promises.d.ts",
+        "default": "./dist/Promises.js"
+      },
+      "import": {
+        "types": "./dist/types/Promises.d.ts",
+        "default": "./dist/Promises.mjs"
+      }
+    }
   },
   "keywords": [
     "Object",
